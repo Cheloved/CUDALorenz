@@ -7,10 +7,10 @@
 #define PI 3.14159265359
 
 // Amount of points to calculate
-#define POINTS_COUNT 1024.0 * 2
+#define POINTS_COUNT 1024.0 * 1000
 
 // Coefficient of point movement. Better not to change
-#define TIME_SCALE 1
+#define TIME_SCALE 0.5
 
 // Create points' tails of not
 #define LEAVE_TRACES 1
@@ -22,7 +22,7 @@
 //#define SCREEN_HEIGHT 400.0
 
 // Degrees per single button press
-#define ROTATION_SPEED 2.0
+#define ROTATION_SPEED 1.0
 
 typedef struct
 {

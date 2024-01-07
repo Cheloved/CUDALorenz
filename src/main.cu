@@ -1,10 +1,10 @@
-#include <GL/freeglut_std.h>
 #include <cstdlib>
 #include <stdio.h>
 #include <stdlib.h>
 
 // Lib for graphics
 #include <GL/glut.h>
+#include <GL/freeglut_std.h>
 
 // CUDA libs
 #include <cuda_runtime.h>
@@ -74,6 +74,14 @@ void check_cuda_error(char* text)
     }
 }
 
+void copy_settings_to_device()
+{
+    cudaMemcpy(c_normal, &normal, sizeof(vector), cudaMemcpyHostToDevice);
+    cudaMemcpy(c_orig, &orig, sizeof(vector), cudaMemcpyHostToDevice);
+    cudaMemcpy(c_center, &center, sizeof(vector), cudaMemcpyHostToDevice);
+    cudaMemcpy(c_settings, &settings, sizeof(s_settings), cudaMemcpyHostToDevice);
+}
+
 void display (void) 
 {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -100,14 +108,45 @@ void display (void)
     //glFlush();
 }
 
-void copy_settings_to_device()
+void process_normal_keys(unsigned char key, int x, int y)
 {
-    cudaMemcpy(c_normal, &normal, sizeof(vector), cudaMemcpyHostToDevice);
-    cudaMemcpy(c_orig, &orig, sizeof(vector), cudaMemcpyHostToDevice);
-    cudaMemcpy(c_center, &center, sizeof(vector), cudaMemcpyHostToDevice);
-    cudaMemcpy(c_settings, &settings, sizeof(s_settings), cudaMemcpyHostToDevice);
+    switch (key) {
+        case 'e':
+            settings.scale *= 1.1;
+            copy_settings_to_device();
+            break;
+        case 'q':
+            settings.scale *= 0.9;
+            copy_settings_to_device();
+            break;
+        case 'w':
+            settings.phi += settings.degree * ROTATION_SPEED;
+            settings.angleChanged = true;
+            copy_settings_to_device();
+            break;
+        case 's':
+            settings.phi -= settings.degree * ROTATION_SPEED;
+            settings.angleChanged = true;
+            copy_settings_to_device();
+            break;
+        case 'd':
+            settings.theta += settings.degree * ROTATION_SPEED;
+            settings.angleChanged = true;
+            copy_settings_to_device();
+            break;
+        case 'a':
+            settings.theta -= settings.degree * ROTATION_SPEED;
+            settings.angleChanged = true;
+            copy_settings_to_device();
+            break;
+        case 'r':
+            settings.theta = 0.0;
+            settings.phi = 0.0;
+            settings.angleChanged = true;
+            copy_settings_to_device();
+            break;
+    }
 }
-
 
 int main(int argc, char** argv)
 {
@@ -137,6 +176,7 @@ int main(int argc, char** argv)
 
     // Initialize points
     random_init(points);
+    //area_init(points);
     cudaMemcpy(c_points, points, POINTS_COUNT*sizeof(vector), cudaMemcpyHostToDevice);
 
     // Initialize OpenGL 
@@ -170,7 +210,7 @@ int main(int argc, char** argv)
     gluOrtho2D(-SCREEN_WIDTH/2, SCREEN_WIDTH/2, -SCREEN_HEIGHT/2, SCREEN_HEIGHT/2);
 
     glutDisplayFunc(display);
-    //glutKeyboardFunc(processNormalKeys);
+    glutKeyboardFunc(process_normal_keys);
     glutMainLoop();
 
     return 0;
