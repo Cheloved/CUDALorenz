@@ -10,10 +10,12 @@
 #define POINTS_COUNT 1024.0 * 1000
 
 // Coefficient of point movement. Better not to change
-#define TIME_SCALE 0.5
+#define TIME_SCALE 0.1
 
-// Create points' tails of not
-#define LEAVE_TRACES 1
+#define OPACITY 0.05
+
+// Length of tails from 0 to 1
+#define TRACES_COEF 0.9
 
 // Window size
 #define SCREEN_WIDTH 1920.0

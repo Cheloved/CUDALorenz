@@ -68,9 +68,9 @@ __global__ void update_pixels(vector* c_pixels, s_settings* c_settings, float* c
     if ( base_idx < 0 || base_idx > SCREEN_HEIGHT*SCREEN_WIDTH * 3 )
         return;
 
-    c_pixel_buffer[ base_idx + 0] += 0.1;
-    c_pixel_buffer[ base_idx + 1] += 0.1;
-    c_pixel_buffer[ base_idx + 2] += 0.1;
+    c_pixel_buffer[ base_idx + 0] += OPACITY;
+    c_pixel_buffer[ base_idx + 1] += OPACITY;
+    c_pixel_buffer[ base_idx + 2] += OPACITY;
 
     return;
 }
@@ -82,9 +82,9 @@ __global__ void clear_buffer(float* c_pixel_buffer)
     if ( i >= SCREEN_WIDTH * SCREEN_HEIGHT )
         return;
 
-    c_pixel_buffer[i*3 + 0] *= 0.25;
-    c_pixel_buffer[i*3 + 1] *= 0.25;
-    c_pixel_buffer[i*3 + 2] *= 0.25;
+    c_pixel_buffer[i*3 + 0] *= TRACES_COEF;
+    c_pixel_buffer[i*3 + 1] *= TRACES_COEF;
+    c_pixel_buffer[i*3 + 2] *= TRACES_COEF;
 
     return;
 }
